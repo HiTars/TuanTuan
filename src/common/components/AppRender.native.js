@@ -1,51 +1,38 @@
 'use strict';
 
-import Screen from './Screen';
-import Formulae from './Formulae';
-import Keyboard from './Keyboard';
-
-import React, {
-  StyleSheet,
-  View,
-  Platform
-} from 'react-native';
+import React from 'react-native';
 
 export default function () {
   return (
     <View style={styles.container}>
-      <View style={styles.screen} >
-        <Screen />
-      </View>
-      <View style={styles.formulae}>
-        <Formulae />
-      </View>
-      <View style={styles.keyboard}>
-        <Keyboard />
-      </View>
+      <Text style={styles.welcome}>
+        HiTars
+      </Text>
+      <Text style={styles.instructions}>
+        To get started, edit index.android.js
+      </Text>
+      <Text style={styles.instructions}>
+        Shake or press menu button for dev menu
+      </Text>
     </View>
   );
 }
 
 var styles = StyleSheet.create({
   container: {
-    flex: 1
-  },
-  screen: {
-    flex: 3,
-    flexDirection: 'row',
-    alignItems: Platform.OS === 'android' ? 'center' : 'flex-end',
-    justifyContent: 'flex-end',
-    backgroundColor: '#68cef2',
-    padding: 18
-  },
-  formulae: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    backgroundColor: '#4c4c4c',
-    padding: 20
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
   },
-  keyboard: {
-    height: 420
-  }
+  welcome: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
+  },
+  instructions: {
+    textAlign: 'center',
+    color: '#333333',
+    marginBottom: 5,
+  },
 });
