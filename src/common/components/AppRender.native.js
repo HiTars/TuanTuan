@@ -1,6 +1,10 @@
 'use strict';
 
-import React from 'react-native';
+import React, {
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 
 export default function () {
   return (

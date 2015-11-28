@@ -1,4 +1,4 @@
-package com.reactnativenwreactcalculator;
+package com.tuan;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import com.facebook.react.ReactRootView;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.tuan.BuildConfig;
 
 public class MainActivity extends Activity implements DefaultHardwareBackBtnHandler {
 
