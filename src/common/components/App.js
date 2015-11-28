@@ -1,11 +1,11 @@
 'use strict';
 
-import Render from './AppRender';
+import Home from './Home';
 
 import { Component } from 'react';
 
 export default class App extends Component {
   render () {
-    return Render.call(this, this.props, this.state);
+    return Home.call(this, this.props, this.state);
   }
 }
