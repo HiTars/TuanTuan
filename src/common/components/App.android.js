@@ -20,7 +20,9 @@ import React, {
 } from 'react-native';
 
 import HomeScreen from './HomeScreen'
+import HomeFooter from './HomeFooter'
 import TuanScreen from './TuanScreen'
+import TuanFooter from './TuanFooter'
 import NavigationView from './NavigationView'
 
 var DRAWER_WIDTH_LEFT = 56;
@@ -73,11 +75,11 @@ var renderHome = function(drawer, navigationOperations) {
           navIcon={require('image!ic_menu_black_24dp')}
           onIconClicked={() => _drawer.openDrawer()}
           style={styles.toolbar}
-          titleColor="white"
+          titleColor="black"
           title={'EatTogether'} />
         <HomeScreen
-          style={{flex: 1}}
           navigator={navigationOperations} />
+        <HomeFooter />
       </View>
     </DrawerLayoutAndroid>
   );
@@ -91,11 +93,11 @@ var renderTuan = function(navigationOperations) {
         navIcon={require('image!android_back_white')}
         onIconClicked={navigationOperations.pop}
         style={styles.toolbar}
-        titleColor="white"
+        titleColor="black"
         title={'TuanName'} />
       <TuanScreen
-        style={{flex: 1}}
         navigator={navigationOperations} />
+      <TuanFooter />
     </View>
   );
 };
@@ -115,7 +117,7 @@ var styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   toolbar: {
-    backgroundColor: '#a9a9a9',
+    backgroundColor: '#e0e0e0',
     height: 56,
   },
 });

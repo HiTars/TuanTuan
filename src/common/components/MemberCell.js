@@ -1,5 +1,5 @@
 /**
- * TuanCell
+ * MemberCell
  *
  * @author zhumeng
  *
@@ -18,7 +18,7 @@ import React, {
   TouchableNativeFeedback,
 } from 'react-native';
 
-export default class TuanCell extends Component {
+export default class MemberCell extends Component {
   render () {
     var TouchableElement = TouchableHighlight;
     if (Platform.OS === 'android') {

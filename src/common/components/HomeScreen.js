@@ -10,6 +10,7 @@
 import { Component } from 'react';
 
 import React, {
+  View,
   Platform,
 } from 'react-native';
 
@@ -22,9 +23,11 @@ export default class HomeScreen extends Component {
       money: 100,
     };
     return (
-      <TuanCell
-        id={tuanObj.id}
-        onSelect={() => this.selectTuan(tuanObj)} />
+      <View style={{flex: 1}}>
+        <TuanCell
+          id={tuanObj.id}
+          onSelect={() => this.selectTuan(tuanObj)} />
+      </View>
     );
   }
 
