@@ -69,7 +69,8 @@
     "react-native-cli": "^0.1.7",
     "react-router": "^1.0.0",
     "serve-static": "^1.10.0",
-    "uniqid": "^1.0.0"
+    "uniqid": "^1.0.0",
+    "avoscloud-sdk": ">=1.0.0-rc5"
   },
   "devDependencies": {
     "babel": "^5.8.29",

@@ -25,6 +25,9 @@ import TuanScreen from './TuanScreen'
 import TuanFooter from './TuanFooter'
 import NavigationView from './NavigationView'
 
+import Init from './AppInit'
+Init.call();
+
 var DRAWER_WIDTH_LEFT = 56;
 
 var toolbarActions = [
