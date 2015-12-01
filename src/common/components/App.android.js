@@ -23,6 +23,7 @@ import HomeScreen from './HomeScreen'
 import HomeFooter from './HomeFooter'
 import TuanScreen from './TuanScreen'
 import TuanFooter from './TuanFooter'
+import LoginScreen from './LoginScreen'
 import NavigationView from './NavigationView'
 
 import Init from './AppInit'
@@ -56,14 +57,21 @@ BackAndroid.addEventListener('hardwareBackPress', () => {
   return false;
 });
 
-var _renderNavigationView =function() {
+// 拉取登录页面
+function logIn(navigator) {
+  navigator.push({
+    name: 'login'
+  });
+}
+
+function _renderNavigationView() {
   return (
     <NavigationView
       style={{flex: 1}} />
   );
-};
+}
 
-var renderHome = function(drawer, navigationOperations) {
+function renderHome(drawer, navigationOperations) {
   var _drawer;
   return (
     <DrawerLayoutAndroid
@@ -81,14 +89,15 @@ var renderHome = function(drawer, navigationOperations) {
           titleColor="black"
           title={'EatTogether'} />
         <HomeScreen
-          navigator={navigationOperations} />
+          navigator={navigationOperations}
+          logIn={()=>logIn(navigationOperations)} />
         <HomeFooter />
       </View>
     </DrawerLayoutAndroid>
   );
-};
+}
 
-var renderTuan = function(navigationOperations) {
+function renderTuan(navigationOperations) {
   return (
     <View style={{flex: 1}}>
       <ToolbarAndroid
@@ -103,11 +112,15 @@ var renderTuan = function(navigationOperations) {
       <TuanFooter />
     </View>
   );
-};
+}
 
 var RouteMapper = function(route, navigationOperations, onComponentRef) {
   _navigator = navigationOperations;
-  if (route.name === 'home') {
+  if (route.name === 'login') {
+    return (
+      <LoginScreen navigator={navigationOperations}/>
+    );
+  } else if (route.name === 'home') {
     return renderHome(route.drawer, navigationOperations);
   } else if (route.name === 'tuan') {
     return renderTuan(navigationOperations);

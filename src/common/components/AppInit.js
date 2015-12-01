@@ -7,7 +7,7 @@
 
 'use strict';
 
-var AV = require('avoscloud-sdk');
+import AV from 'avoscloud-sdk';
 
 export default function () {
   // 替换 App ID 和 App Key

@@ -12,11 +12,27 @@ import { Component } from 'react';
 import React, {
   View,
   Platform,
+  ToastAndroid,
 } from 'react-native';
+
+import AV from 'avoscloud-sdk';
 
 import TuanCell from './TuanCell'
 
 export default class HomeScreen extends Component {
+
+  // 模块加载时需确保登录状态
+  componentDidMount() {
+    AV.User.currentAsync().then((currentUser) => {
+      console.log('currentUser: ',currentUser);
+      if (!currentUser) {
+        this.props.logIn();
+      } else {
+        //TodoActions.fetchAll();
+      }
+    });
+  }
+
   render () {
     var tuanObj = {
       id: 0,
