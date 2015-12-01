@@ -22,6 +22,8 @@ import React, {
 
 import AV from 'avoscloud-sdk';
 
+import UserActions from '../actions/UserActions'
+
 export default class LoginScreen extends Component {
 
   // https://facebook.github.io/react/docs/reusable-components.html#es6-classes
@@ -47,7 +49,7 @@ export default class LoginScreen extends Component {
     user.set("password", this.state.password);
     user.logIn().then((user) => {
       console.log('User logged in:', user);
-      //TodoActions.fetchAll();
+      UserActions.fetchTuans();
       this.props.navigator.pop();
     }).catch(function(error) {
       console.log("Login Error: ", error);
