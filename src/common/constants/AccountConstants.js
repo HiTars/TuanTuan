@@ -1,5 +1,5 @@
 /**
- * UserConstants
+ * AccountConstants
  *
  * @author zhumeng
  *
@@ -10,5 +10,5 @@
 import keyMirror from 'keymirror';
 
 module.exports = keyMirror({
-  USER_FETCH_TUANS: null,
+  FETCH_ACOUNTS: null,
 });

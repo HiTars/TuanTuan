@@ -22,7 +22,7 @@ import React, {
 
 import AV from 'avoscloud-sdk';
 
-import UserActions from '../actions/UserActions'
+import AccountActions from '../actions/AccountActions'
 
 export default class LoginScreen extends Component {
 
@@ -49,7 +49,7 @@ export default class LoginScreen extends Component {
     user.set("password", this.state.password);
     user.logIn().then((user) => {
       console.log('User logged in:', user);
-      UserActions.fetchTuans();
+      AccountActions.fetchAccounts();
       this.props.navigator.pop();
     }).catch(function(error) {
       console.log("Login Error: ", error);

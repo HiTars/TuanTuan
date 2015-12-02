@@ -1,5 +1,5 @@
 /**
- * UserStore
+ * AccountStore
  *
  * @author zhumeng
  *
@@ -9,40 +9,24 @@
 
 import { Component } from 'react';
 
+var AV = require('avoscloud-sdk');
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var EventEmitter = require('eventemitter2').EventEmitter2;
-var UserConstants = require('../constants/UserConstants');
 var AppGlobal = require('../constants/AppGlobal');
 var assign = require('object-assign');
-
-var AV = require('avoscloud-sdk');
+var AccountConstants = require('../constants/AccountConstants');
 
 var CHANGE_EVENT = 'change';
 
-// A map of id->(tuanobj, news)
-var _tuans = {};
+// An Array of Accounts
+var _acounts = [];
 
-function add(tuan, news) {
-  var id = tuan.get('tuanid');
-  _tuans[id] = {'tuan':tuan, 'news':(news ? news:0)};
-  if (tuan.dirty()) {
-    return tuan.save();
-  } else {
-    return AV.Promise.as();
-  }
-}
-
-function clearAllTuans() {
-  _tuans = {};
-}
-
-var UserStore = assign({}, EventEmitter.prototype, {
+var AccountStore = assign({}, EventEmitter.prototype, {
   /**
-   * Get the entire collection of tuans.
-   * @return {object}
+   * Get the entire collection of accounts.
    */
-  getAllTuans: function() {
-    return _tuans;
+  getAllAccounts: function() {
+    return _acounts;
   },
 
   emitChange: function() {
@@ -65,22 +49,19 @@ var UserStore = assign({}, EventEmitter.prototype, {
 });
 
 // Register callback to handle all updates
-UserStore.dispatchToken = AppDispatcher.register(function(action) {
+AccountStore.dispatchToken = AppDispatcher.register(function(action) {
   switch(action.actionType) {
-    case UserConstants.USER_FETCH_TUANS:
+    case AccountConstants.FETCH_ACCOUNTS:
       AV.User.currentAsync().then((currentUser) => {
-        clearAllTuans();
         var query = new AV.Query(AppGlobal.Account);
         query.equalTo('user', currentUser);
         query.notEqualTo('state', -1);
         query.descending("updatedAt");
         query.include('tuan');
         query.find().then((results) => {
-          for (var i = 0; i < results.length; i++) {
-            add(results[i].get('tuan'), results[i].get('news'));
-          }
-          console.log(results);
-          UserStore.emitChange();
+          _acounts = results
+          console.log(_acounts);
+          AccountStore.emitChange();
         }).catch((e)=>console.log(e));
       });
       break;
@@ -90,4 +71,4 @@ UserStore.dispatchToken = AppDispatcher.register(function(action) {
   }
 });
 
-module.exports = UserStore;
+module.exports = AccountStore;

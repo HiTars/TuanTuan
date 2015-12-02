@@ -25,13 +25,13 @@ export default class TuanCell extends Component {
     if (Platform.OS === 'android') {
       TouchableElement = TouchableNativeFeedback;
     }
-    console.log(this.props.tuan.tuan);
+    console.log(this.props.account.get('tuan'));
     return (
       <View>
         <TouchableElement onPress={this.props.onSelect}>
           <View style={styles.circle}>
             <Text style={styles.welcome}>
-              {this.props.tuan.tuan.get('name')}
+              {this.props.account.get('tuan').get('name')}
             </Text>
           </View>
         </TouchableElement>

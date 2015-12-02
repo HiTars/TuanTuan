@@ -12,15 +12,16 @@ import { Component } from 'react';
 import React, {
   View,
   ListView,
+  StyleSheet,
   Platform,
   ToastAndroid,
 } from 'react-native';
 
 import AV from 'avoscloud-sdk';
 
-import UserActions from '../actions/UserActions'
+import AccountActions from '../actions/AccountActions'
 
-import UserStore from '../stores/UserStore'
+import AccountStore from '../stores/AccountStore'
 
 import TuanCell from './TuanCell'
 
@@ -46,14 +47,14 @@ export default class HomeScreen extends Component {
       if (!currentUser) {
         this.props.logIn();
       } else {
-        UserStore.addChangeListener(this._onChange);
-        UserActions.fetchTuans();
+        AccountStore.addChangeListener(this._onChange);
+        AccountActions.fetchAccounts();
       }
     }, (e)=>console.log(e));
   }
 
   componentWillUnmount() {
-    UserStore.removeChangeListener(this._onChange);
+    AccountStore.removeChangeListener(this._onChange);
   }
 
   /**
@@ -64,43 +65,36 @@ export default class HomeScreen extends Component {
   }
 
   _updateState() {
-    tuansArray = [];
-    tuans = UserStore.getAllTuans();
-    for (var key in tuans) {
-      tuansArray.push({key, value: tuans[key]});
-    }
     this.setState({
-      dataSource: this.state.dataSource.cloneWithRows(tuansArray)
+      dataSource: this.state.dataSource.cloneWithRows(AccountStore.getAllAccounts())
     });
   }
 
   render () {
     return (
-      <ListView
+      <ListView contentContainerStyle={styles.list}
         style={{flex: 1}}
         keyboardDismissMode="on-drag"
         automaticallyAdjustContentInsets={false}
         keyboardShouldPersistTaps={true}
         dataSource={this.state.dataSource}
         renderRow={(rowData) =>
-          <TuanCell id={rowData.key} tuan={rowData.value} onSelect={() => this.selectTuan(rowData.value)} />
+          <TuanCell account={rowData} onSelect={() => this.selectTuan(rowData)} />
         } />
     );
   }
 
-  selectTuan (tuanObj) {
-    if (Platform.OS === 'ios') {
-      this.props.navigator.push({
-        id: tuanObj.id,
-        component: TuanScreen,
-        passProps: {tuanObj},
-      });
-    } else {
-      this.props.navigator.push({
-        id: tuanObj.id,
-        name: 'tuan',
-        tuan: tuanObj,
-      });
-    }
+  selectTuan (account) {
+    this.props.navigator.push({
+      name: 'tuan',
+      account: account,
+    });
   }
 }
+
+var styles = StyleSheet.create({
+  list: {
+    flexDirection: 'row',
+    flexWrap: 'wrap'
+  }
+});
