@@ -98,7 +98,7 @@ function renderHome(drawer, navigationOperations) {
   );
 }
 
-function renderTuan(navigationOperations) {
+function renderTuan(account, navigationOperations) {
   return (
     <View style={{flex: 1}}>
       <ToolbarAndroid
@@ -107,9 +107,10 @@ function renderTuan(navigationOperations) {
         onIconClicked={navigationOperations.pop}
         style={styles.toolbar}
         titleColor="black"
-        title={'TuanName'} />
+        title={account.get('tuan').get('name')} />
       <TuanScreen
-        navigator={navigationOperations} />
+        navigator={navigationOperations}
+        account={account} />
       <TuanFooter />
     </View>
   );
@@ -124,7 +125,7 @@ var RouteMapper = function(route, navigationOperations, onComponentRef) {
   } else if (route.name === 'home') {
     return renderHome(route.drawer, navigationOperations);
   } else if (route.name === 'tuan') {
-    return renderTuan(navigationOperations);
+    return renderTuan(route.account, navigationOperations);
   }
 };
 

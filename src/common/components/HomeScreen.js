@@ -13,16 +13,12 @@ import React, {
   View,
   ListView,
   StyleSheet,
-  Platform,
-  ToastAndroid,
 } from 'react-native';
 
 import AV from 'avoscloud-sdk';
 
 import AccountActions from '../actions/AccountActions'
-
 import AccountStore from '../stores/AccountStore'
-
 import TuanCell from './TuanCell'
 
 export default class HomeScreen extends Component {
@@ -37,7 +33,6 @@ export default class HomeScreen extends Component {
 
     // Bind callback methods to make `this` the correct context.
     this._onChange = this._onChange.bind(this);
-    this._updateState = this._updateState.bind(this);
   }
 
   // 模块加载时需确保登录状态
@@ -58,7 +53,7 @@ export default class HomeScreen extends Component {
   }
 
   /**
-   * Event handler for 'change' events coming from the TodoStore
+   * Event handler for 'change' events coming from the AccountStore
    */
   _onChange() {
     this._updateState();
@@ -70,13 +65,10 @@ export default class HomeScreen extends Component {
     });
   }
 
-  render () {
+  render() {
     return (
       <ListView contentContainerStyle={styles.list}
         style={{flex: 1}}
-        keyboardDismissMode="on-drag"
-        automaticallyAdjustContentInsets={false}
-        keyboardShouldPersistTaps={true}
         dataSource={this.state.dataSource}
         renderRow={(rowData) =>
           <TuanCell account={rowData} onSelect={() => this.selectTuan(rowData)} />
@@ -84,7 +76,7 @@ export default class HomeScreen extends Component {
     );
   }
 
-  selectTuan (account) {
+  selectTuan(account) {
     this.props.navigator.push({
       name: 'tuan',
       account: account,

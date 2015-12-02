@@ -12,6 +12,7 @@ import { Component } from 'react';
 import React, {
   StyleSheet,
   Image,
+  Text,
   View,
   Platform,
   TouchableHighlight,
@@ -26,14 +27,11 @@ export default class MemberCell extends Component {
     }
     return (
       <View>
-        <TouchableElement
-          onPress={this.props.onSelect}>
-          <View>
-            {/* $FlowIssue #7363964 - There's a bug in Flow where you cannot
-              * omit a property or set it to undefined if it's inside a shape,
-              * even if it isn't required */}
-            <Image style={styles.pic}
-              source={{uri: 'https://avatars1.githubusercontent.com/u/16018092?v=3&s=200'}} />
+        <TouchableElement onPress={this.props.onSelect}>
+          <View style={styles.circle}>
+            <Text style={styles.welcome}>
+              {this.props.account.get('tuan').get('name')}
+            </Text>
           </View>
         </TouchableElement>
       </View>
@@ -42,9 +40,15 @@ export default class MemberCell extends Component {
 }
 
 var styles = StyleSheet.create({
-  pic: {
-      borderRadius:50,
-      width:100,
-      height:100,
+  welcome: {
+    fontSize: 20,
+  },
+  circle: {
+    width: 100,
+    height: 100,
+    borderRadius: 100/2,
+    backgroundColor: 'red',
+    justifyContent: 'center', 
+    alignItems: 'center',
   }
 });
