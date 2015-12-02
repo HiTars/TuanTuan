@@ -20,6 +20,7 @@ import AV from 'avoscloud-sdk';
 import AccountActions from '../actions/AccountActions'
 import AccountStore from '../stores/AccountStore'
 import TuanCell from './TuanCell'
+import TuanScreen from './TuanScreen'
 
 export default class HomeScreen extends Component {
 
@@ -32,6 +33,7 @@ export default class HomeScreen extends Component {
     }
 
     // Bind callback methods to make `this` the correct context.
+    this.selectTuan = this.selectTuan.bind(this);
     this._onChange = this._onChange.bind(this);
   }
 

@@ -19,12 +19,12 @@ export default class HomeFooter extends Component {
     return (
       <View style={{flexDirection: 'row', height: 72, borderTopWidth: 1, borderColor: 'gray'}}>
         <View style={{flex: 1}}>
-          <Text style={{fontSize: 48}}>Tars</Text>
+          <Text style={{fontSize: 20}}>Tars</Text>
         </View>
         <View style={{flex: 4, borderLeftWidth: 1, borderRightWidth: 1, borderColor: 'gray'}}>
         </View>
         <View style={{flex: 1}}>
-          <Text style={{fontSize: 48}}>建团</Text>
+          <Text style={{fontSize: 20}}>建团</Text>
         </View>
       </View>
     );
