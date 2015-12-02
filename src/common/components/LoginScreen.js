@@ -30,8 +30,8 @@ export default class LoginScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: 'oUgQgt29VhAPB59qvib78KMFZw1I',
-      password: 'pwd:oUgQgt29VhAPB59qvib78KMFZw1I'
+      username: 'o9cLJtzNIKvZDcrn1BSX-f_Z1wac',
+      password: 'pwd:o9cLJtzNIKvZDcrn1BSX-f_Z1wac'
     };
 
     // Bind callback methods to make `this` the correct context.

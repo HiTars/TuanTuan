@@ -79,6 +79,7 @@ UserStore.dispatchToken = AppDispatcher.register(function(action) {
           for (var i = 0; i < results.length; i++) {
             add(results[i].get('tuan'), results[i].get('news'));
           }
+          console.log(results);
           UserStore.emitChange();
         }).catch((e)=>console.log(e));
       });

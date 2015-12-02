@@ -64,10 +64,11 @@ function logIn(navigator) {
   });
 }
 
-function _renderNavigationView() {
+function _renderNavigationView(navigationOperations) {
   return (
     <NavigationView
-      style={{flex: 1}} />
+      style={{flex: 1}}
+      logIn={()=>logIn(navigationOperations)} />
   );
 }
 
@@ -79,7 +80,7 @@ function renderHome(drawer, navigationOperations) {
         drawerWidth={Dimensions.get('window').width - DRAWER_WIDTH_LEFT}
         keyboardDismissMode="on-drag"
         ref={(drawer) => { _drawer = drawer; }}
-        renderNavigationView={_renderNavigationView}>
+        renderNavigationView={()=>_renderNavigationView(navigationOperations)}>
       <View style={{flex: 1}}>
         <ToolbarAndroid
           actions={[]}

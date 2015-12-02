@@ -11,6 +11,7 @@ import { Component } from 'react';
 
 import React, {
   View,
+  ListView,
   Platform,
   ToastAndroid,
 } from 'react-native';
@@ -23,21 +24,19 @@ import UserStore from '../stores/UserStore'
 
 import TuanCell from './TuanCell'
 
-function getUserState() {
-  return {
-    allTuans: UserStore.getAllTuans()
-  };
-}
-
 export default class HomeScreen extends Component {
 
   // https://facebook.github.io/react/docs/reusable-components.html#es6-classes
   constructor(props) {
     super(props);
-    this.state = getUserState();
+
+    this.state = {
+      dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
+    }
 
     // Bind callback methods to make `this` the correct context.
     this._onChange = this._onChange.bind(this);
+    this._updateState = this._updateState.bind(this);
   }
 
   // 模块加载时需确保登录状态
@@ -47,8 +46,8 @@ export default class HomeScreen extends Component {
       if (!currentUser) {
         this.props.logIn();
       } else {
-        UserActions.fetchTuans();
         UserStore.addChangeListener(this._onChange);
+        UserActions.fetchTuans();
       }
     }, (e)=>console.log(e));
   }
@@ -61,20 +60,31 @@ export default class HomeScreen extends Component {
    * Event handler for 'change' events coming from the TodoStore
    */
   _onChange() {
-    this.setState(getUserState());
+    this._updateState();
+  }
+
+  _updateState() {
+    tuansArray = [];
+    tuans = UserStore.getAllTuans();
+    for (var key in tuans) {
+      tuansArray.push({key, value: tuans[key]});
+    }
+    this.setState({
+      dataSource: this.state.dataSource.cloneWithRows(tuansArray)
+    });
   }
 
   render () {
-    var tuanObj = {
-      id: 0,
-      money: 100,
-    };
     return (
-      <View style={{flex: 1}}>
-        <TuanCell
-          id={tuanObj.id}
-          onSelect={() => this.selectTuan(tuanObj)} />
-      </View>
+      <ListView
+        style={{flex: 1}}
+        keyboardDismissMode="on-drag"
+        automaticallyAdjustContentInsets={false}
+        keyboardShouldPersistTaps={true}
+        dataSource={this.state.dataSource}
+        renderRow={(rowData) =>
+          <TuanCell id={rowData.key} tuan={rowData.value} onSelect={() => this.selectTuan(rowData.value)} />
+        } />
     );
   }
 
