@@ -36,12 +36,12 @@ export default class TuanScreen extends Component {
   }
 
   componentDidMount() {
-    AccountStore.addChangeListener(this._onChange);
-    AccountActions.fetchAccounts();
+    AccountStore.addChangeListener(this._onChange, this.props.account.id);
+    AccountActions.fetchAccountsOfAccount(this.props.account);
   }
 
   componentWillUnmount() {
-    AccountStore.removeChangeListener(this._onChange);
+    AccountStore.removeChangeListener(this._onChange, this.props.account.id);
   }
 
   /**
@@ -53,7 +53,7 @@ export default class TuanScreen extends Component {
 
   _updateState() {
     this.setState({
-      dataSource: this.state.dataSource.cloneWithRows(AccountStore.getAllAccounts())
+      dataSource: this.state.dataSource.cloneWithRows(AccountStore.getAccountsOfAccount(this.props.account.id))
     });
   }
 

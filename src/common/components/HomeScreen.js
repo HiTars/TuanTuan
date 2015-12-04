@@ -44,14 +44,14 @@ export default class HomeScreen extends Component {
       if (!currentUser) {
         this.props.logIn();
       } else {
-        AccountStore.addChangeListener(this._onChange);
+        AccountStore.addChangeListener(this._onChange, 'ALL');
         AccountActions.fetchAccounts();
       }
     }, (e)=>console.log(e));
   }
 
   componentWillUnmount() {
-    AccountStore.removeChangeListener(this._onChange);
+    AccountStore.removeChangeListener(this._onChange, 'ALL');
   }
 
   /**

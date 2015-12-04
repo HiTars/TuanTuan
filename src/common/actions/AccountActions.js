@@ -19,6 +19,13 @@ var AccountActions = {
     });
   },
 
+  fetchAccountsOfAccount: function(account) {
+    AppDispatcher.dispatch({
+      actionType: AccountConstants.FETCH_ACCOUNTS_OF_ACCOUNT,
+      account: account
+    });
+  },
+
 };
 
 module.exports = AccountActions;

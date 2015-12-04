@@ -30,7 +30,7 @@ export default class MemberCell extends Component {
         <TouchableElement onPress={this.props.onSelect}>
           <View style={styles.circle}>
             <Text style={styles.welcome}>
-              {this.props.account.get('tuan').get('name')}
+              {this.props.account.get('user').get('nickname')}
             </Text>
           </View>
         </TouchableElement>
