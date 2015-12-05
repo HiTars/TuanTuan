@@ -15,8 +15,8 @@ import React, {
   StyleSheet,
 } from 'react-native';
 
-import AV from 'avoscloud-sdk';
-
+import ScrollableTabView from 'react-native-scrollable-tab-view'
+import AV from 'avoscloud-sdk'
 import AccountActions from '../actions/AccountActions'
 import AccountStore from '../stores/AccountStore'
 import MemberCell from './MemberCell'
@@ -58,12 +58,25 @@ export default class TuanScreen extends Component {
   }
 
   render() {
+    console.log('Tuan data', this.state.dataSource);
     return (
-
-      <ListView contentContainerStyle={styles.list}
-        style={{flex: 1}}
-        renderRow={(rowData) => <MemberCell account={rowData} onSelect={() => this.selectMember(rowData)} />}
-        dataSource={this.state.dataSource} />
+      <ScrollableTabView>
+        <View tabLabel="成员">
+          <ListView contentContainerStyle={styles.list}
+            style={{flex: 1}}
+            renderRow={
+              (rowData) => {
+                return <MemberCell account={rowData} onSelect={() => this.selectMember(rowData)} />
+              }
+            }
+            dataSource={this.state.dataSource} />
+        </View>
+        <View tabLabel="历史" />
+          <ListView contentContainerStyle={styles.list}
+            style={{flex: 1}}
+            dataSource={this.state.dataSource} />
+        <View tabLabel="设置"/>
+      </ScrollableTabView>
     );
   }
 
@@ -76,3 +89,5 @@ var styles = StyleSheet.create({
     flexWrap: 'wrap'
   }
 });
+
+

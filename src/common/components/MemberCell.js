@@ -41,10 +41,12 @@ export default class MemberCell extends Component {
     return (
       <View>
         <TouchableElement onPress={this.props.checkable ? this._onPress : this.props.onSelect}>
+          <View style={getCircleWrapStyles(this.state.selected)}>
           <View style={getCircleStyles(this.state.selected)}>
             <Text style={styles.welcome}>
               {this.props.account.get('user').get('nickname')}
             </Text>
+          </View>
           </View>
         </TouchableElement>
       </View>
@@ -61,17 +63,31 @@ export default class MemberCell extends Component {
 
 var getCircleStyles = function(selected) {
   return {
-    width: 100,
-    height: 100,
-    borderRadius: 100/2,
-    backgroundColor: (selected?'blue':'red'),
-    justifyContent: 'center', 
+    height: 70,
+    width: 70,
+    margin: 10,
+    backgroundColor: 'rgb(164,129,200)',
+    borderRadius: 70/2,
+    backgroundColor: (selected ? 'rgb(164,129,200)' : 'rgb(0,129,200)'),
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
+};
+var getCircleWrapStyles = function(selected) {
+  return {
+    height: 80,
+    width: 80,
+    margin: 10,
+    borderRadius: 80/2,
+    backgroundColor: (selected ? 'rgba(164,129,200, .5)' : 'rgba(0,129,200, .5)'),
+    justifyContent: 'center',
     alignItems: 'center',
   }
 };
 
 var styles = StyleSheet.create({
   welcome: {
-    fontSize: 20,
+    fontSize: 15,
+    color: 'white'
   }
 });

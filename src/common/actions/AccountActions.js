@@ -33,7 +33,7 @@ var AccountActions = {
       start: start,
       length: length
     });
-  }
+  },
 
   doAABill: function(account, selected, othersnum, price) {
     AppDispatcher.dispatch({
