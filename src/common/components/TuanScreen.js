@@ -59,6 +59,7 @@ export default class TuanScreen extends Component {
 
   render() {
     return (
+
       <ListView contentContainerStyle={styles.list}
         style={{flex: 1}}
         renderRow={(rowData) => <MemberCell account={rowData} onSelect={() => this.selectMember(rowData)} />}
