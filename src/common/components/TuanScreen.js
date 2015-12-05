@@ -28,7 +28,8 @@ export default class TuanScreen extends Component {
     super(props);
 
     this.state = {
-      dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
+      membersSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
+      historySource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
     }
 
     // Bind callback methods to make `this` the correct context.
@@ -38,6 +39,7 @@ export default class TuanScreen extends Component {
   componentDidMount() {
     AccountStore.addChangeListener(this._onChange, this.props.account.id);
     AccountActions.fetchAccountsOfAccount(this.props.account);
+    AccountActions.fetchHistoryOfAccount(this.props.account, 0, 10);
   }
 
   componentWillUnmount() {
@@ -53,12 +55,13 @@ export default class TuanScreen extends Component {
 
   _updateState() {
     this.setState({
-      dataSource: this.state.dataSource.cloneWithRows(AccountStore.getAccountsOfAccount(this.props.account.id))
+      membersSource: this.state.dataSource.cloneWithRows(AccountStore.getAccountsOfAccount(this.props.account.id)),
+      historySource: this.state.dataSource.cloneWithRows(AccountStore.getHistoryOfAccount(this.props.account.id)),
     });
   }
 
   render() {
-    console.log('Tuan data', this.state.dataSource);
+    console.log('Tuan data', this.state.membersSource);
     return (
       <ScrollableTabView>
         <View tabLabel="成员">
@@ -69,12 +72,12 @@ export default class TuanScreen extends Component {
                 return <MemberCell account={rowData} onSelect={() => this.selectMember(rowData)} />
               }
             }
-            dataSource={this.state.dataSource} />
+            dataSource={this.state.membersSource} />
         </View>
         <View tabLabel="历史" />
           <ListView contentContainerStyle={styles.list}
             style={{flex: 1}}
-            dataSource={this.state.dataSource} />
+            dataSource={this.state.historySource} />
         <View tabLabel="设置"/>
       </ScrollableTabView>
     );

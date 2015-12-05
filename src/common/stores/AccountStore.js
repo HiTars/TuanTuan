@@ -109,7 +109,8 @@ AccountStore.dispatchToken = AppDispatcher.register(function(action) {
       return query.find().then(function(results) {
         _historyMap[action.account.id] = results;
         console.log(_historyMap[action.account.id]);
-      });
+        AccountStore.emitChange(action.account.id);
+      }).catch((e)=>console.log(e));;
       break;
     case AccountConstants.CREATE_ACCOUNT:
       AppGlobal.alert(action.actionType);
