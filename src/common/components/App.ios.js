@@ -19,6 +19,7 @@ import React, {
   TouchableHighlight,
   TouchableOpacity,
 } from 'react-native';
+var cssVar = require('cssVar');
 
 import HomeScreen from './HomeScreen'
 import HomeFooter from './HomeFooter'
@@ -30,9 +31,9 @@ import NavigationView from './NavigationView'
 import Init from './AppInit'
 Init.call();
 
-var cssVar = require('cssVar');
 
 var initialRoute = {name: 'home', title: '首页'};
+
 export default class App extends Component {
   render () {
     return (
@@ -88,49 +89,29 @@ var NavigationBarRouteMapper = {
 
 };
 
-
-function renderHome(navigationOperations) {
-  return (
-    <View style={{flex: 1}}>
-      <HomeScreen
-        logIn={()=>logIn(navigationOperations)} />
-      <HomeFooter />
-      </View>
-  );
-}
-
-function renderTuan(navigationOperations) {
-  return (
-    <View style={{flex: 1}}>
-      <TuanScreen
-        navigator={navigationOperations} />
-      <TuanFooter />
-    </View>
-  );
-}
-
 var RouteMapper = function(route, navigationOperations, onComponentRef) {
   _navigator = navigationOperations;
-  if (route.name === 'login') {
-    return (
-      <LoginScreen navigator={navigationOperations}/>
-    );
-  } else if (route.name === 'home') {
-    return (
-      <View style={{flex: 1}}>
-        <HomeScreen
-          navigator={navigationOperations}
-          logIn={()=>logIn(navigationOperations)} />
-        <HomeFooter />
-      </View>
-    );
-  } else if (route.name === 'tuan') {
-    return (
-      <View style={{flex: 1}}>
-        <TuanScreen />
-        <TuanFooter />
-      </View>
-    );
+  switch (route.name) {
+    case 'login':
+      return (
+        <LoginScreen navigator={navigationOperations}/>
+      );
+    case 'home':
+      return (
+        <View style={{flex: 1, marginTop:70}}>
+          <HomeScreen
+            navigator={navigationOperations} />
+          <HomeFooter
+            logIn={()=>logIn(navigationOperations)} />
+        </View>
+      );
+    case 'tuan':
+      return (
+        <View style={{flex: 1}}>
+          <TuanScreen />
+          <TuanFooter />
+        </View>
+      );
   }
 };
 
@@ -155,7 +136,7 @@ var styles = StyleSheet.create({
     fontWeight: '500',
   },
   navBar: {
-    backgroundColor: 'white',
+    backgroundColor: '#e3e3e3',
   },
   navBarText: {
     fontSize: 16,
@@ -164,7 +145,7 @@ var styles = StyleSheet.create({
   navBarTitleText: {
     color: cssVar('fbui-bluegray-60'),
     fontWeight: '500',
-    marginVertical: 9,
+    marginVertical: 15,
   },
   navBarLeftButton: {
     paddingLeft: 10,

@@ -104,7 +104,7 @@ var styles = StyleSheet.create({
     fontSize: 32,
     color: 'orange',
     fontWeight: 'bold',
-    textAlign: 'center',
+    // textAlign: 'center',
     marginBottom: 60
   },
 
@@ -137,7 +137,7 @@ var styles = StyleSheet.create({
     flex: 1,
     fontSize: 20,
     padding: 10,
-    textAlign: 'center',
+    // textAlign: 'center',
   },
   loginButtonText: {
     color: 'white'

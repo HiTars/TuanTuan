@@ -27,7 +27,7 @@ var _acounts = [];
 var _map = {};
 
 var AccountStore = assign({}, EventEmitter.prototype, {
-  
+
   getCurrentUser: function() {
     return _user;
   },
@@ -73,7 +73,7 @@ AccountStore.dispatchToken = AppDispatcher.register(function(action) {
         query.include('tuan');
         query.find().then((results) => {
           _acounts = results
-          console.log(_acounts);
+
           AccountStore.emitChange('ALL');
         }).catch((e)=>console.log(e));
       });

@@ -3,7 +3,7 @@ export default {
     paddingHorizontal: 12,
     flexDirection: 'row',
     alignItems: 'center',
-    textAlign: 'center',
+    // textAlign: 'center',
   },
   btnText: {
     color: 'orange',

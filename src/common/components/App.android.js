@@ -151,7 +151,6 @@ var RouteMapper = function(route, navigationOperations, onComponentRef) {
 
 var styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: 'white',
   },
   toolbar: {

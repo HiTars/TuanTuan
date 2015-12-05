@@ -89,6 +89,7 @@ export default class HomeScreen extends Component {
 var styles = StyleSheet.create({
   list: {
     flexDirection: 'row',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
+    justifyContent : 'center'
   }
 });
