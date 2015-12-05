@@ -23,6 +23,7 @@ import HomeScreen from './HomeScreen'
 import HomeFooter from './HomeFooter'
 import TuanScreen from './TuanScreen'
 import TuanFooter from './TuanFooter'
+import AABillScreen from './AABillScreen'
 import LoginScreen from './LoginScreen'
 import NavigationView from './NavigationView'
 
@@ -111,7 +112,24 @@ function renderTuan(account, navigationOperations) {
       <TuanScreen
         navigator={navigationOperations}
         account={account} />
-      <TuanFooter />
+      <TuanFooter
+        navigator={navigationOperations} />
+    </View>
+  );
+}
+
+function renderAABill(navigationOperations) {
+  return (
+    <View style={{flex: 1}}>
+      <ToolbarAndroid
+        actions={[]}
+        navIcon={require('image!android_back_white')}
+        onIconClicked={navigationOperations.pop}
+        style={styles.toolbar}
+        titleColor="black"
+        title={'AABill'} />
+      <AABillScreen
+        navigator={navigationOperations} />
     </View>
   );
 }
@@ -126,6 +144,8 @@ var RouteMapper = function(route, navigationOperations, onComponentRef) {
     return renderHome(route.drawer, navigationOperations);
   } else if (route.name === 'tuan') {
     return renderTuan(route.account, navigationOperations);
+  } else if (route.name === 'aabill') {
+    return renderAABill(navigationOperations);
   }
 };
 

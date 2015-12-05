@@ -18,6 +18,8 @@ var AccountConstants = require('../constants/AccountConstants');
 
 var CHANGE_EVENT = 'change';
 
+var _user = null;
+
 // An Array of Accounts
 var _acounts = [];
 
@@ -26,6 +28,10 @@ var _map = {};
 
 var AccountStore = assign({}, EventEmitter.prototype, {
   
+  getCurrentUser: function() {
+    return _user;
+  },
+
   getAllAccounts: function() {
     return _acounts;
   },
@@ -35,6 +41,7 @@ var AccountStore = assign({}, EventEmitter.prototype, {
   },
 
   emitChange: function(id) {
+    console.log('emit: '+CHANGE_EVENT+id);
     this.emit(CHANGE_EVENT+id);
   },
 
@@ -58,6 +65,7 @@ AccountStore.dispatchToken = AppDispatcher.register(function(action) {
   switch(action.actionType) {
     case AccountConstants.FETCH_ACCOUNTS:
       AV.User.currentAsync().then((currentUser) => {
+        _user = currentUser;
         var query = new AV.Query(AppGlobal.Account);
         query.equalTo('user', currentUser);
         query.notEqualTo('state', -1);

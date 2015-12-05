@@ -51,20 +51,7 @@ export default class LoginScreen extends Component {
       console.log('User logged in:', user);
       AccountActions.fetchAccounts();
       this.props.navigator.pop();
-    }).catch(function(error) {
-      console.log("Login Error: ", error);
-      if (Platform.OS === 'android') {
-        ToastAndroid.show(error.message, ToastAndroid.LONG);
-      } else {
-        AlertIOS.alert(
-          error.message,
-          null,
-          [
-            {text: 'OK'},
-          ]
-        );
-      }
-    });
+    }).catch((e)=>console.log(e));
   }
 
   signup() {
