@@ -13,7 +13,9 @@ import React, {
   View,
   Text,
   ListView,
+  TextInput,
   StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
 
 import AV from 'avoscloud-sdk';
@@ -33,7 +35,8 @@ export default class AABillScreen extends Component {
     this.state = {
       user: AccountStore.getCurrentUser(),
       dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
-      selected: {}
+      selected: {},
+      price: 0
     }
 
     // Bind callback methods to make `this` the correct context.
@@ -61,7 +64,8 @@ export default class AABillScreen extends Component {
     this.setState({
       user: AccountStore.getCurrentUser(),
       dataSource: this.state.dataSource.cloneWithRows(accounts),
-      selected: this._clearSelected(false)
+      selected: this._clearSelected(false),
+      price: 0
     });
   }
 
@@ -78,7 +82,7 @@ export default class AABillScreen extends Component {
     return (
       <View style={{flex: 1}}>
         <View style={{height: 158, backgroundColor: 'gray'}}>
-          <Text>{this.state.user.get('nickname')}请你吃饭</Text>
+          <Text>{this.state.user.get('nickname')} 请你吃饭</Text>
         </View>
         <ListView contentContainerStyle={styles.list}
           style={{flex: 1}}
@@ -88,12 +92,27 @@ export default class AABillScreen extends Component {
               checkable={true} />
           }
           dataSource={this.state.dataSource} />
+        <TextInput style={{height: 46}}
+          onChangeText={(text) => this.setState({price: (parseInt(text) ? parseInt(text) : 0)})}
+          value={this.state.price} />
+        <View style={{height: 46, backgroundColor: 'gray'}}>
+          <TouchableOpacity onPress={()=>AccountActions.doAABill(this.props.account, this.state.selected, 0, this.state.price)}>
+            <Text style={{fontSize: 24}}>AABill</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
 
   selectMember(account) {
     this.state.selected[account.id] = !this.state.selected[account.id];
+  }
+
+  setPrice(event) {
+    var filter = event.nativeEvent.text;
+
+    this.clearTimeout(this.timeoutID);
+    this.timeoutID = this.setTimeout(() => this.searchMovies(filter), 100);
   }
 
 }

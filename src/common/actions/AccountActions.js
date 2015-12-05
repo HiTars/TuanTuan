@@ -26,6 +26,16 @@ var AccountActions = {
     });
   },
 
+  doAABill: function(account, selected, othersnum, price) {
+    AppDispatcher.dispatch({
+      actionType: AccountConstants.DO_AABILL,
+      account: account,
+      selected: selected,
+      othersnum: othersnum,
+      price: price
+    });
+  },
+
 };
 
 module.exports = AccountActions;

@@ -94,6 +94,9 @@ AccountStore.dispatchToken = AppDispatcher.register(function(action) {
           AccountStore.emitChange(action.account.id);
       }).catch((e)=>console.log(e));
       break;
+    case AccountConstants.DO_AABILL:
+      
+      break;
 
     default:
       // no op

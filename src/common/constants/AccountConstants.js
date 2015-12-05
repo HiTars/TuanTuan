@@ -11,5 +11,6 @@ import keyMirror from 'keymirror';
 
 module.exports = keyMirror({
   FETCH_ACOUNTS: null,
-  FETCH_ACCOUNTS_OF_ACCOUNT: null
+  FETCH_ACCOUNTS_OF_ACCOUNT: null,
+  DO_AABILL: null
 });
