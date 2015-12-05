@@ -26,6 +26,15 @@ var AccountActions = {
     });
   },
 
+  fetchHistoryOfAccount: function(account, start, length) {
+    AppDispatcher.dispatch({
+      actionType: AccountConstants.FETCH_HISTORY_OF_ACCOUNT,
+      account: account,
+      start: start,
+      length: length
+    });
+  }
+
   doAABill: function(account, selected, othersnum, price) {
     AppDispatcher.dispatch({
       actionType: AccountConstants.DO_AABILL,
