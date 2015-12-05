@@ -113,12 +113,13 @@ function renderTuan(account, navigationOperations) {
         navigator={navigationOperations}
         account={account} />
       <TuanFooter
-        navigator={navigationOperations} />
+        navigator={navigationOperations}
+        account={account} />
     </View>
   );
 }
 
-function renderAABill(navigationOperations) {
+function renderAABill(account, navigationOperations) {
   return (
     <View style={{flex: 1}}>
       <ToolbarAndroid
@@ -129,7 +130,8 @@ function renderAABill(navigationOperations) {
         titleColor="black"
         title={'AABill'} />
       <AABillScreen
-        navigator={navigationOperations} />
+        navigator={navigationOperations}
+        account={account} />
     </View>
   );
 }
@@ -145,7 +147,7 @@ var RouteMapper = function(route, navigationOperations, onComponentRef) {
   } else if (route.name === 'tuan') {
     return renderTuan(route.account, navigationOperations);
   } else if (route.name === 'aabill') {
-    return renderAABill(navigationOperations);
+    return renderAABill(route.account, navigationOperations);
   }
 };
 

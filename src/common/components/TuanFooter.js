@@ -20,21 +20,21 @@ export default class TuanFooter extends Component {
     return (
       <View style={{flexDirection: 'row', height: 72, borderTopWidth: 1, borderColor: 'gray'}}>
         <View style={{flex: 1}}>
-          <TouchableOpacity onPress={this.props.navigator.push({name: 'aabill'})}>
-            <Text style={{fontSize: 48}}>'AABill'</Text>
+          <TouchableOpacity onPress={()=>this.props.navigator.push({name: 'aabill', account: this.props.account})}>
+            <Text style={{fontSize: 18}}>AABill</Text>
           </TouchableOpacity>
         </View>
         <View style={{flex: 1, borderLeftWidth: 1, borderColor: 'gray'}}>
-          <Text style={{fontSize: 48}}>2</Text>
+          <Text style={{fontSize: 32}}>2</Text>
         </View>
         <View style={{flex: 1, borderLeftWidth: 1, borderColor: 'gray'}}>
-          <Text style={{fontSize: 48}}>3</Text>
+          <Text style={{fontSize: 32}}>3</Text>
         </View>
         <View style={{flex: 1, borderLeftWidth: 1, borderColor: 'gray'}}>
-          <Text style={{fontSize: 48}}>4</Text>
+          <Text style={{fontSize: 32}}>4</Text>
         </View>
         <View style={{flex: 1, borderLeftWidth: 1, borderColor: 'gray'}}>
-          <Text style={{fontSize: 48}}>5</Text>
+          <Text style={{fontSize: 32}}>5</Text>
         </View>
       </View>
     );

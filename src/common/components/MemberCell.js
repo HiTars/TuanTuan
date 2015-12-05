@@ -28,7 +28,7 @@ export default class MemberCell extends Component {
     return (
       <View>
         <TouchableElement onPress={this.props.onSelect}>
-          <View style={styles.circle}>
+          <View style={getCircleStyles(this.props.selected)}>
             <Text style={styles.welcome}>
               {this.props.account.get('user').get('nickname')}
             </Text>
@@ -39,16 +39,19 @@ export default class MemberCell extends Component {
   }
 }
 
-var styles = StyleSheet.create({
-  welcome: {
-    fontSize: 20,
-  },
-  circle: {
+var getCircleStyles = function(selected) {
+  return {
     width: 100,
     height: 100,
     borderRadius: 100/2,
-    backgroundColor: 'red',
+    backgroundColor: (selected?'blue':'red'),
     justifyContent: 'center', 
     alignItems: 'center',
+  }
+};
+
+var styles = StyleSheet.create({
+  welcome: {
+    fontSize: 20,
   }
 });

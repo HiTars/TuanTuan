@@ -21,6 +21,7 @@ import AV from 'avoscloud-sdk';
 import AccountActions from '../actions/AccountActions'
 import AccountStore from '../stores/AccountStore'
 import MemberCell from './MemberCell'
+import AppGlobal from '../constants/AppGlobal'
 
 export default class AABillScreen extends Component {
 
@@ -28,9 +29,11 @@ export default class AABillScreen extends Component {
   constructor(props) {
     super(props);
 
+    // user不能初始化为null，不然render里可能会先访问到null
     this.state = {
-      user: null,
-      dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
+      user: AccountStore.getCurrentUser(),
+      dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
+      selected: {}
     }
 
     // Bind callback methods to make `this` the correct context.
@@ -54,28 +57,45 @@ export default class AABillScreen extends Component {
   }
 
   _updateState() {
-    AppGlobal.alert(AccountStore.getCurrentUser());
+    accounts = AccountStore.getAccountsOfAccount(this.props.account.id);
     this.setState({
       user: AccountStore.getCurrentUser(),
-      dataSource: this.state.dataSource.cloneWithRows(AccountStore.getAccountsOfAccount(this.props.account.id))
+      dataSource: this.state.dataSource.cloneWithRows(accounts),
+      selected: this._clearSelected(false)
     });
+  }
+
+  _clearSelected(flag) {
+    selected = {};
+    accounts = AccountStore.getAccountsOfAccount(this.props.account.id);
+    for (var i = 0; i < accounts.length; i++) {
+      selected[accounts[i].id] = flag;
+    }
+    return selected;
   }
 
   render() {
     return (
       <View style={{flex: 1}}>
-        <View style={{height: 108, backgroundColor: 'gray'}}>
-          <Text>{}请你吃饭</Text>
+        <View style={{height: 158, backgroundColor: 'gray'}}>
+          <Text>{this.state.user.get('nickname')}请你吃饭</Text>
         </View>
         <ListView contentContainerStyle={styles.list}
-        style={{flex: 1}}
-        renderRow={(rowData) => <MemberCell account={rowData} onSelect={() => this.selectMember(rowData)} />}
-        dataSource={this.state.dataSource} />
+          style={{flex: 1}}
+          renderRow={(rowData) =>
+            <MemberCell account={rowData}
+              onSelect={() => this.selectMember(rowData)}
+              selected={this.state.selected[rowData.id]} />
+          }
+          dataSource={this.state.dataSource} />
       </View>
     );
   }
 
-  selectMember(account) {}
+  selectMember(account) {
+    this.state.selected[account.id] = true;
+  }
+
 }
 
 var styles = StyleSheet.create({
