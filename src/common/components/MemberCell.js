@@ -20,6 +20,19 @@ import React, {
 } from 'react-native';
 
 export default class MemberCell extends Component {
+
+  // https://facebook.github.io/react/docs/reusable-components.html#es6-classes
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      selected: false
+    }
+
+    // Bind callback methods to make `this` the correct context.
+    this._onPress = this._onPress.bind(this);
+  }
+
   render () {
     var TouchableElement = TouchableHighlight;
     if (Platform.OS === 'android') {
@@ -27,8 +40,8 @@ export default class MemberCell extends Component {
     }
     return (
       <View>
-        <TouchableElement onPress={this.props.onSelect}>
-          <View style={getCircleStyles(this.props.selected)}>
+        <TouchableElement onPress={this.props.checkable ? this._onPress : this.props.onSelect}>
+          <View style={getCircleStyles(this.state.selected)}>
             <Text style={styles.welcome}>
               {this.props.account.get('user').get('nickname')}
             </Text>
@@ -36,6 +49,13 @@ export default class MemberCell extends Component {
         </TouchableElement>
       </View>
     );
+  }
+
+  _onPress() {
+    this.setState({
+      selected: !this.state.selected
+    });
+    this.props.onSelect();
   }
 }
 

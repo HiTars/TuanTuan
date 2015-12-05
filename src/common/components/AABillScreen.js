@@ -85,7 +85,7 @@ export default class AABillScreen extends Component {
           renderRow={(rowData) =>
             <MemberCell account={rowData}
               onSelect={() => this.selectMember(rowData)}
-              selected={this.state.selected[rowData.id]} />
+              checkable={true} />
           }
           dataSource={this.state.dataSource} />
       </View>
@@ -93,7 +93,7 @@ export default class AABillScreen extends Component {
   }
 
   selectMember(account) {
-    this.state.selected[account.id] = true;
+    this.state.selected[account.id] = !this.state.selected[account.id];
   }
 
 }
