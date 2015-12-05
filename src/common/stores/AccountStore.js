@@ -24,7 +24,10 @@ var _user = null;
 var _acounts = [];
 
 // A Map of Account->Accounts
-var _map = {};
+var _accountsMap = {};
+
+// A Map of Account->History
+var _historyMap = {};
 
 var AccountStore = assign({}, EventEmitter.prototype, {
 
@@ -37,7 +40,11 @@ var AccountStore = assign({}, EventEmitter.prototype, {
   },
 
   getAccountsOfAccount: function(id) {
-    return _map[id];
+    return _accountsMap[id];
+  },
+
+  getHistoryOfAccount: function(id) {
+    return _historyMap[id];
   },
 
   emitChange: function(id) {
@@ -73,7 +80,6 @@ AccountStore.dispatchToken = AppDispatcher.register(function(action) {
         query.include('tuan');
         query.find().then((results) => {
           _acounts = results
-
           AccountStore.emitChange('ALL');
         }).catch((e)=>console.log(e));
       });
@@ -85,17 +91,34 @@ AccountStore.dispatchToken = AppDispatcher.register(function(action) {
       query.include('user');
       query.include('tuan');
       query.find().then((results) => {
-          var members = [];
-          results.sort(function(a, b) {
-              return a.get('money') - b.get('money');
-          });
-          _map[action.account.id] = results;
-          console.log(_map);
-          AccountStore.emitChange(action.account.id);
+        var members = [];
+        results.sort(function(a, b) {
+            return a.get('money') - b.get('money');
+        });
+        _accountsMap[action.account.id] = results;
+        AccountStore.emitChange(action.account.id);
       }).catch((e)=>console.log(e));
       break;
+    case AccountConstants.FETCH_HISTORY_OF_ACCOUNT:
+      var query = new AV.Query(AppGlobal.TuanHistory);
+      query.equalTo('tuan', action.account.get('tuan'));
+      query.descending("createdAt");
+      query.skip(action.start);
+      query.limit(action.length);
+      query.include('creater');
+      return query.find().then(function(results) {
+        _historyMap[action.account.id] = results;
+        console.log(_historyMap[action.account.id]);
+      });
+      break;
+    case AccountConstants.CREATE_ACCOUNT:
+      AppGlobal.alert(action.actionType);
+      break;
+    case AccountConstants.QUIT_TUAN:
+      AppGlobal.alert(action.actionType);
+      break;
     case AccountConstants.DO_AABILL:
-      
+      AppGlobal.alert(action.actionType);
       break;
 
     default:

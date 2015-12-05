@@ -33,6 +33,18 @@ var AccountActions = {
       start: start,
       length: length
     });
+  },
+
+  createAccount: function() {
+    AppDispatcher.dispatch({
+      actionType: AccountConstants.CREATE_ACCOUNT,
+    });
+  },
+
+  quitTuan: function() {
+    AppDispatcher.dispatch({
+      actionType: AccountConstants.QUIT_TUAN,
+    });
   }
 
   doAABill: function(account, selected, othersnum, price) {
