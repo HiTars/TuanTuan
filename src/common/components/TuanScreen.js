@@ -39,7 +39,7 @@ export default class TuanScreen extends Component {
   componentDidMount() {
     AccountStore.addChangeListener(this._onChange, this.props.account.id);
     AccountActions.fetchAccountsOfAccount(this.props.account);
-    AccountActions.fetchHistoryOfAccount(this.props.account, 0, 10);
+    AccountActions.fetchHistoryOfAccount(this.props.account);
   }
 
   componentWillUnmount() {
@@ -60,6 +60,10 @@ export default class TuanScreen extends Component {
     });
   }
 
+  _onEndReached() {
+    AccountActions.fetchMoreHistoryOfAccount(this.props.account);
+  }
+
   render() {
     console.log('Tuan data', this.state.membersSource);
     return (
@@ -77,6 +81,7 @@ export default class TuanScreen extends Component {
         <View tabLabel="历史" />
           <ListView contentContainerStyle={styles.list}
             style={{flex: 1}}
+            onEndReached={this.onEndReached}
             dataSource={this.state.historySource} />
         <View tabLabel="设置"/>
       </ScrollableTabView>

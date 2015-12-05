@@ -103,11 +103,25 @@ AccountStore.dispatchToken = AppDispatcher.register(function(action) {
       var query = new AV.Query(AppGlobal.TuanHistory);
       query.equalTo('tuan', action.account.get('tuan'));
       query.descending("createdAt");
-      query.skip(action.start);
-      query.limit(action.length);
+      query.skip(0);
+      query.limit(10);
       query.include('creater');
       return query.find().then(function(results) {
         _historyMap[action.account.id] = results;
+        console.log(_historyMap[action.account.id]);
+        AccountStore.emitChange(action.account.id);
+      }).catch((e)=>console.log(e));;
+      break;
+    case AccountConstants.FETCH_MORE_HISTORY_OF_ACCOUNT:
+      var start = _historyMap[action.account.id].length;
+      var query = new AV.Query(AppGlobal.TuanHistory);
+      query.equalTo('tuan', action.account.get('tuan'));
+      query.descending("createdAt");
+      query.skip(start);
+      query.limit(start+10);
+      query.include('creater');
+      return query.find().then(function(results) {
+        _historyMap[action.account.id] = _historyMap[action.account.id].concat(results);
         console.log(_historyMap[action.account.id]);
         AccountStore.emitChange(action.account.id);
       }).catch((e)=>console.log(e));;

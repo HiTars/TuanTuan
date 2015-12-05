@@ -26,12 +26,17 @@ var AccountActions = {
     });
   },
 
-  fetchHistoryOfAccount: function(account, start, length) {
+  fetchHistoryOfAccount: function(account) {
     AppDispatcher.dispatch({
       actionType: AccountConstants.FETCH_HISTORY_OF_ACCOUNT,
-      account: account,
-      start: start,
-      length: length
+      account: account
+    });
+  },
+
+  fetchMoreHistoryOfAccount: function(account) {
+    AppDispatcher.dispatch({
+      actionType: AccountConstants.FETCH_MORE_HISTORY_OF_ACCOUNT,
+      account: account
     });
   },
 
