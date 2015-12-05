@@ -50,7 +50,10 @@ export default class LoginScreen extends Component {
     user.logIn().then((user) => {
       console.log('User logged in:', user);
       AccountActions.fetchAccounts();
-      this.props.navigator.pop();
+      this.props.navigator.push({
+          name : 'home',
+          title : '饭团'
+      });
     }).catch((e)=>console.log(e));
   }
 
