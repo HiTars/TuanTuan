@@ -25,7 +25,7 @@ var _acounts = [];
 var _map = {};
 
 var AccountStore = assign({}, EventEmitter.prototype, {
-  
+
   getAllAccounts: function() {
     return _acounts;
   },
@@ -65,7 +65,7 @@ AccountStore.dispatchToken = AppDispatcher.register(function(action) {
         query.include('tuan');
         query.find().then((results) => {
           _acounts = results
-          console.log(_acounts);
+
           AccountStore.emitChange('ALL');
         }).catch((e)=>console.log(e));
       });

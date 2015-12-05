@@ -29,10 +29,13 @@ export default class TuanCell extends Component {
     return (
       <View>
         <TouchableElement onPress={this.props.onSelect}>
+
+          <View style={styles.circleWrap}>
           <View style={styles.circle}>
             <Text style={styles.welcome}>
               {this.props.account.get('tuan').get('name')}
             </Text>
+          </View>
           </View>
         </TouchableElement>
       </View>
@@ -42,14 +45,27 @@ export default class TuanCell extends Component {
 
 var styles = StyleSheet.create({
   welcome: {
-    fontSize: 20,
+    fontSize: 15,
+    color: 'white'
+  },
+  circleWrap : {
+    height: 80,
+    width: 80,
+    margin: 10,
+    backgroundColor: 'rgba(164, 129, 200, .3)',
+    borderRadius: 80/2,
+    justifyContent: 'center',
+    alignItems: 'center',
+
   },
   circle: {
-    width: 100,
-    height: 100,
-    borderRadius: 100/2,
-    backgroundColor: 'blue',
-    justifyContent: 'center', 
+    height: 70,
+    width: 70,
+    margin: 10,
+    backgroundColor: 'rgb(164,129,200)',
+    borderRadius: 70/2,
+    justifyContent: 'center',
     alignItems: 'center',
+
   }
 });

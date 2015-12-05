@@ -49,7 +49,7 @@ var styles = StyleSheet.create({
   },
   welcome: {
     fontSize: 20,
-    textAlign: 'center',
+    // textAlign: 'center',
     margin: 10,
   },
   pic: {
