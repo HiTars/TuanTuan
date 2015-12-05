@@ -27,26 +27,19 @@ import TuanScreen from './TuanScreen'
 import TuanFooter from './TuanFooter'
 import LoginScreen from './LoginScreen'
 import NavigationView from './NavigationView'
-import NavigationBarRouteMapper from './NavigatorRouteMapper'
+import Nav from './Navigator'
 
 import Init from './AppInit'
 Init.call();
 
-var initialRoute = {name: 'login'};
+var initialRoute = {name: 'home'};
 
 
 export default function () {
   return (
-      <Navigator
+      <Nav
         initialRoute={initialRoute}
-        renderScene={RouteMapper}
-        navigationBar={
-          <Navigator.NavigationBar
-            routeMapper={NavigationBarRouteMapper}
-            style={styles.navBar}
-          />
-        }
-      />
+        renderScene={RouteMapper}/>
     );
 } ;
 
@@ -67,16 +60,17 @@ var RouteMapper = function(route, navigationOperations, onComponentRef) {
       );
     case 'home':
       return (
-        <View style={{flex: 1, marginTop:70}}>
+        <View style={{flex: 1}}>
           <HomeScreen
-            navigator={navigationOperations} />
+            navigator={navigationOperations}
+            logIn={()=>logIn(navigationOperations)} />
           <HomeFooter
             logIn={()=>logIn(navigationOperations)} />
         </View>
       );
     case 'tuan':
       return (
-        <View style={{flex: 1}}>
+        <View style={{flex: 1, marginTop : 70}}>
           <TuanScreen
             navigator={navigationOperations}
             account={route.account} />
@@ -90,59 +84,10 @@ var RouteMapper = function(route, navigationOperations, onComponentRef) {
 };
 
 
-
 var styles = StyleSheet.create({
-  messageText: {
-    fontSize: 17,
-    fontWeight: '500',
-    padding: 15,
-    marginTop: 50,
-    marginLeft: 15,
-  },
-  button: {
-    backgroundColor: 'white',
-    padding: 15,
-    borderBottomWidth: 1 / PixelRatio.get(),
-    borderBottomColor: '#CDCDCD',
-  },
-  buttonText: {
-    fontSize: 17,
-    fontWeight: '500',
-  },
   navBar: {
     backgroundColor: '#e3e3e3',
-  },
-  navBarText: {
-    fontSize: 16,
-    marginVertical: 10,
-  },
-  navBarTitleText: {
-    color: cssVar('fbui-bluegray-60'),
-    fontWeight: '500',
-    marginVertical: 15,
-  },
-  navBarLeftButton: {
-    paddingLeft: 10,
-  },
-  navBarRightButton: {
-    paddingRight: 10,
-  },
-  navBarButtonText: {
-    color: cssVar('fbui-accent-blue'),
-  },
-  scene: {
-    flex: 1,
-    paddingTop: 20,
-    backgroundColor: '#EAEAEA',
-  },
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  toolbar: {
-    backgroundColor: '#e0e0e0',
-    height: 56,
-  },
+  }
 });
 
 

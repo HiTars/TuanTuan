@@ -45,7 +45,7 @@ var AccountActions = {
     AppDispatcher.dispatch({
       actionType: AccountConstants.QUIT_TUAN,
     });
-  }
+  },
 
   doAABill: function(account, selected, othersnum, price) {
     AppDispatcher.dispatch({

@@ -29,7 +29,6 @@ export default class TuanCell extends Component {
     return (
       <View>
         <TouchableElement onPress={this.props.onSelect}>
-
           <View style={styles.circleWrap}>
           <View style={styles.circle}>
             <Text style={styles.welcome}>

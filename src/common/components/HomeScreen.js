@@ -79,9 +79,12 @@ export default class HomeScreen extends Component {
   }
 
   selectTuan(account) {
+    console.log(account.get('tuan'))
     this.props.navigator.push({
       name: 'tuan',
-      account: account,
+      title : account.get('tuan').get('name'),
+      account : account,
+      showNav : true
     });
   }
 }
