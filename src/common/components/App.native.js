@@ -25,9 +25,11 @@ import HomeScreen from './HomeScreen'
 import HomeFooter from './HomeFooter'
 import TuanScreen from './TuanScreen'
 import TuanFooter from './TuanFooter'
+import AABillScreen from './AABillScreen'
 import LoginScreen from './LoginScreen'
 import NavigationView from './NavigationView'
 import Nav from './Navigator'
+import AppGlobal from '../constants/AppGlobal'
 
 import Init from './AppInit'
 Init.call();
@@ -79,8 +81,16 @@ var RouteMapper = function(route, navigationOperations, onComponentRef) {
             account={route.account} />
         </View>
       );
+    case 'aabill':
+      return (
+        <View style={{flex: 1, marginTop : 70}}>
+          <AABillScreen
+            navigator={navigationOperations}
+            account={route.account} />
+        </View>
+      );
   }
-
+  AppGlobal.alert("No RouteMapper");
 };
 
 

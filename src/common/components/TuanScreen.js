@@ -20,6 +20,8 @@ import AV from 'avoscloud-sdk'
 import AccountActions from '../actions/AccountActions'
 import AccountStore from '../stores/AccountStore'
 import MemberCell from './MemberCell'
+import HistoryRow from './HistoryRow'
+import AppGlobal from '../constants/AppGlobal'
 
 export default class TuanScreen extends Component {
 
@@ -37,9 +39,9 @@ export default class TuanScreen extends Component {
   }
 
   componentDidMount() {
-    AccountStore.addChangeListener(this._onChange, this.props.account.id);
     AccountActions.fetchAccountsOfAccount(this.props.account);
     AccountActions.fetchHistoryOfAccount(this.props.account);
+    AccountStore.addChangeListener(this._onChange, this.props.account.id);
   }
 
   componentWillUnmount() {
@@ -55,17 +57,17 @@ export default class TuanScreen extends Component {
 
   _updateState() {
     this.setState({
-      membersSource: this.state.dataSource.cloneWithRows(AccountStore.getAccountsOfAccount(this.props.account.id)),
-      historySource: this.state.dataSource.cloneWithRows(AccountStore.getHistoryOfAccount(this.props.account.id)),
+      membersSource: this.state.membersSource.cloneWithRows(AccountStore.getAccountsOfAccount(this.props.account.id)),
+      historySource: this.state.historySource.cloneWithRows(AccountStore.getHistoryOfAccount(this.props.account.id)),
     });
   }
 
   _onEndReached() {
-    AccountActions.fetchMoreHistoryOfAccount(this.props.account);
+    AppGlobal.alert('xxx');
+    //AccountActions.fetchMoreHistoryOfAccount(this.props.account);
   }
 
   render() {
-    console.log('Tuan data', this.state.membersSource);
     return (
       <ScrollableTabView>
         <View tabLabel="成员">
@@ -78,11 +80,17 @@ export default class TuanScreen extends Component {
             }
             dataSource={this.state.membersSource} />
         </View>
-        <View tabLabel="历史" />
+        <View tabLabel="历史">
           <ListView contentContainerStyle={styles.list}
             style={{flex: 1}}
             onEndReached={this.onEndReached}
+            renderRow={
+              (rowData) => {
+                return <HistoryRow history={rowData} onSelect={() => this.selectMember(rowData)} />
+              }
+            }
             dataSource={this.state.historySource} />
+        </View>
         <View tabLabel="设置"/>
       </ScrollableTabView>
     );
