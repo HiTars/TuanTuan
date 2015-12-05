@@ -22,6 +22,7 @@ import AccountStore from '../stores/AccountStore'
 import MemberCell from './MemberCell'
 import HistoryRow from './HistoryRow'
 import AppGlobal from '../constants/AppGlobal'
+import TabBars from './TabBars'
 
 export default class TuanScreen extends Component {
 
@@ -56,6 +57,7 @@ export default class TuanScreen extends Component {
   }
 
   _updateState() {
+    console.log(AccountStore.getAccountsOfAccount(this.props.account.id));
     this.setState({
       membersSource: this.state.membersSource.cloneWithRows(AccountStore.getAccountsOfAccount(this.props.account.id)),
       historySource: this.state.historySource.cloneWithRows(AccountStore.getHistoryOfAccount(this.props.account.id)),
@@ -68,7 +70,7 @@ export default class TuanScreen extends Component {
 
   render() {
     return (
-      <ScrollableTabView>
+      <ScrollableTabView style={{flex:1}} renderTabBar={() => <TabBars />} >
         <View tabLabel="成员">
           <ListView contentContainerStyle={styles.list}
             style={{flex: 1}}
