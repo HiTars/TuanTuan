@@ -92,7 +92,7 @@ var genHistory = function(user, tuan, type, notice) {
 };
 
 // 创建一条Account或激活原来的Account
-var JoinTuan = function(user, tuan, account) {
+var joinTuan = function(user, tuan, account) {
   var record = false;
   if (account) {
     if (account.get('state') == -1) {
@@ -120,22 +120,37 @@ var JoinTuan = function(user, tuan, account) {
   return account.save();
 };
 
+var fetchAccounts = function() {
+  var query = new AV.Query(AppGlobal.Account);
+  query.equalTo('user', _user);
+  query.notEqualTo('state', -1);
+  query.descending("updatedAt");
+  query.include('tuan');
+  query.find().then((results) => {
+    _acounts = results
+    AccountStore.emitChange('ALL');
+  });
+}
+
+// 删除团，该团成员的账户，所有团历史
+var deleteTuan = function(tuan) {
+    var accountQuery = new AV.Query(AppGlobal.Account);
+    accountQuery.equalTo('tuan', tuan);
+    accountQuery.destroyAll();
+    var historyQuery = new AV.Query(AppGlobal.TuanHistory);
+    historyQuery.equalTo('tuan', tuan);
+    historyQuery.destroyAll();
+    tuan.destroy();
+}
+
 // Register callback to handle all updates
 AccountStore.dispatchToken = AppDispatcher.register(function(action) {
   switch(action.actionType) {
     case AccountConstants.FETCH_ACCOUNTS:
       AV.User.currentAsync().then((currentUser) => {
         _user = currentUser;
-        var query = new AV.Query(AppGlobal.Account);
-        query.equalTo('user', currentUser);
-        query.notEqualTo('state', -1);
-        query.descending("updatedAt");
-        query.include('tuan');
-        query.find().then((results) => {
-          _acounts = results
-          AccountStore.emitChange('ALL');
-        }).catch((e)=>console.log(e));
-      });
+        fetchAccounts();
+      }).catch((e)=>console.log(e));
       break;
     case AccountConstants.FETCH_ACCOUNTS_OF_ACCOUNT:
       var query = new AV.Query(AppGlobal.Account);
@@ -192,11 +207,36 @@ AccountStore.dispatchToken = AppDispatcher.register(function(action) {
         // 生成建团记录
         genHistory(_user, tuan, AppGlobal.HISTORY_TYPE.CREATE, false);
         // 加入团
-        return JoinTuan(_user, tuan, null);
+        return joinTuan(_user, tuan, null);
+      }).then(() => {
+        fetchAccounts();
       }).catch((e)=>console.log(e));
       break;
     case AccountConstants.QUIT_TUAN:
-      AppGlobal.alert(action.actionType);
+      var message = null;
+      if (action.account.get('tuan').get('members') < 2) {
+        message = '您是最后一个退出该团的人，团信息将被全部清理';
+        deleteTuan(action.account.get('tuan'));
+      } else {
+        var money = formatFloat(action.account.get('money'));
+        if (money > 10) {
+          // 清除账户余额再退团
+          message = '您在该团还有较多结余(' + money + ')，请销账后再退团';
+        } else if (money < -10) {
+          // 清除账户余额再退团
+          message = '您在该团还有较多欠款(' + money + ')，请销账后再退团';
+        } else {
+          // 直接退团，生成退团记录
+          genHistory(_user, tuan, AppGlobal.HISTORY_TYPE.QUIT, true);
+          message = '您在该团只有(' + money + ')团币，系统已经直接退团';
+          action.account.get('tuan').increment('members', -1);
+          // 只标记不删除
+          action.account.set('state', -1);
+          action.account.set('news', 0);
+          action.account.save();
+        }
+      }
+      AppGlobal.alert(message);
       break;
     case AccountConstants.DO_AABILL:
       AppGlobal.alert(action.actionType);

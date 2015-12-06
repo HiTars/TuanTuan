@@ -46,9 +46,10 @@ var AccountActions = {
     });
   },
 
-  quitTuan: function() {
+  quitTuan: function(account) {
     AppDispatcher.dispatch({
       actionType: AccountConstants.QUIT_TUAN,
+      account: account
     });
   },
 
