@@ -67,6 +67,59 @@ var AccountStore = assign({}, EventEmitter.prototype, {
   }
 });
 
+var genHistory = function(user, tuan, type, notice) {
+  var tuanHistory = new AppGlobal.TuanHistory();
+  tuanHistory.set('creater', user);
+  tuanHistory.set('tuan', tuan);
+  tuanHistory.set('type', type);
+  tuanHistory.set('data', {
+      'username': user.get('nickname'),
+      'tuanname': tuan.get('name')
+  });
+  if (notice) {
+    var query = new AV.Query(AppGlobal.Account);
+    query.equalTo('tuan', tuan);
+    query.notEqualTo('state', -1);
+    query.find().then(function(results) {
+      // 给所有团员发消息
+      for (var i = 0; i < results.length; i++) {
+        results[i].increment('news');
+        results[i].save();
+      }
+    });
+  }
+  return tuanHistory.save();
+};
+
+// 创建一条Account或激活原来的Account
+var JoinTuan = function(user, tuan, account) {
+  var record = false;
+  if (account) {
+    if (account.get('state') == -1) {
+      // 以前加入过该团
+      record = true;
+      tuan.increment('members');
+      account.set('tuan', tuan);
+      account.set('state', 0);
+    }
+  } else {
+    // 第一次加入该团
+    record = true;
+    account = new AppGlobal.Account();
+    tuan.increment('members');
+    account.set('user', user);
+    account.set('tuan', tuan);
+    account.set('money', 0);
+    account.set('state', 0);
+    account.set('news', 0);
+  }
+  if (record) {
+    // 生成入团记录
+    genHistory(user, tuan, AppGlobal.HISTORY_TYPE.JOIN, true);
+  }
+  return account.save();
+};
+
 // Register callback to handle all updates
 AccountStore.dispatchToken = AppDispatcher.register(function(action) {
   switch(action.actionType) {
@@ -106,7 +159,7 @@ AccountStore.dispatchToken = AppDispatcher.register(function(action) {
       query.skip(0);
       query.limit(10);
       query.include('creater');
-      return query.find().then(function(results) {
+      query.find().then(function(results) {
         _historyMap[action.account.id] = results;
         console.log(_historyMap[action.account.id]);
         AccountStore.emitChange(action.account.id);
@@ -120,14 +173,27 @@ AccountStore.dispatchToken = AppDispatcher.register(function(action) {
       query.skip(start);
       query.limit(start+10);
       query.include('creater');
-      return query.find().then(function(results) {
+      query.find().then(function(results) {
         _historyMap[action.account.id] = _historyMap[action.account.id].concat(results);
         console.log(_historyMap[action.account.id]);
         AccountStore.emitChange(action.account.id);
-      }).catch((e)=>console.log(e));;
+      }).catch((e)=>console.log(e));
       break;
     case AccountConstants.CREATE_ACCOUNT:
-      AppGlobal.alert(action.actionType);
+      var tuan = new AppGlobal.Tuan();
+      tuan.fetchWhenSave(true);
+      tuan.set('name', '新团');
+      tuan.set('creater', _user);
+      tuan.set('money', 0);
+      tuan.set('news', 0);
+      tuan.set('members', 0);
+      tuan.set('slogan', '给一个响亮的团口号吧！');
+      tuan.save().then(function(tuan) {
+        // 生成建团记录
+        genHistory(_user, tuan, AppGlobal.HISTORY_TYPE.CREATE, false);
+        // 加入团
+        return JoinTuan(_user, tuan, null);
+      }).catch((e)=>console.log(e));
       break;
     case AccountConstants.QUIT_TUAN:
       AppGlobal.alert(action.actionType);

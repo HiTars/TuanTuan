@@ -63,8 +63,7 @@ export default class TuanScreen extends Component {
   }
 
   _onEndReached() {
-    AppGlobal.alert('xxx');
-    //AccountActions.fetchMoreHistoryOfAccount(this.props.account);
+    AccountActions.fetchMoreHistoryOfAccount(this.props.account);
   }
 
   render() {
