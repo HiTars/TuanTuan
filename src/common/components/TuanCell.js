@@ -65,6 +65,5 @@ var styles = StyleSheet.create({
     borderRadius: 70/2,
     justifyContent: 'center',
     alignItems: 'center',
-
   }
 });

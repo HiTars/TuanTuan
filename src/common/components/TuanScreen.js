@@ -13,6 +13,10 @@ import React, {
   View,
   ListView,
   StyleSheet,
+  ScrollView,
+  Dimensions,
+  Text,Image
+
 } from 'react-native';
 
 import ScrollableTabView from 'react-native-scrollable-tab-view'
@@ -23,6 +27,7 @@ import MemberCell from './MemberCell'
 import HistoryRow from './HistoryRow'
 import AppGlobal from '../constants/AppGlobal'
 import TabBars from './TabBars'
+var deviceWidth = Dimensions.get('window').width;
 
 export default class TuanScreen extends Component {
 
@@ -68,11 +73,15 @@ export default class TuanScreen extends Component {
     AccountActions.fetchMoreHistoryOfAccount(this.props.account);
   }
 
+
   render() {
+    console.log(this.props.account.get('tuan'))
+    var tuanInfo = this.props.account.get('tuan')
     return (
-      <ScrollableTabView style={{flex:1}} renderTabBar={() => <TabBars />} >
-        <View tabLabel="成员">
-          <ListView contentContainerStyle={styles.list}
+       <View style={styles.container}>
+        <ScrollableTabView renderTabBar={() => <TabBars />}>
+          <ScrollView tabLabel="ion|ios-people" style={styles.tabView}>
+            <ListView contentContainerStyle={styles.list}
             style={{flex: 1}}
             renderRow={
               (rowData) => {
@@ -80,20 +89,46 @@ export default class TuanScreen extends Component {
               }
             }
             dataSource={this.state.membersSource} />
-        </View>
-        <View tabLabel="历史">
-          <ListView contentContainerStyle={styles.list}
+          </ScrollView>
+          <ScrollView tabLabel="ion|clock" style={styles.tabView}>
+            <ListView contentContainerStyle={styles.listColumn}
             style={{flex: 1}}
             onEndReached={this.onEndReached}
             renderRow={
               (rowData) => {
-                return <HistoryRow history={rowData} onSelect={() => this.selectMember(rowData)} />
+                return <HistoryRow history={rowData} />
               }
             }
             dataSource={this.state.historySource} />
-        </View>
-        <View tabLabel="设置"/>
-      </ScrollableTabView>
+          </ScrollView>
+          <ScrollView tabLabel="ion|wrench" style={styles.tabView}>
+              <View style={styles.card} >
+                <Text>
+                  团名:
+                  {tuanInfo.get('name')}
+                </Text>
+              </View>
+              <View style={styles.card} >
+                <Text>
+                  共消费:
+                  {tuanInfo.get('money')}
+                </Text>
+              </View>
+              <View style={styles.card} >
+                <Image
+                    source={{uri : tuanInfo.get('qrcode').url}}
+                    style={{width: 250, height: 250, }}/>
+              </View>
+              <View style={styles.card} >
+                <Text>
+                  团口号：
+                  {tuanInfo.get('slogan')}
+                </Text>
+              </View>
+
+          </ScrollView>
+        </ScrollableTabView>
+      </View>
     );
   }
 
@@ -104,7 +139,31 @@ var styles = StyleSheet.create({
   list: {
     flexDirection: 'row',
     flexWrap: 'wrap'
-  }
+  },
+  listColumn: {
+    flexDirection: 'column',
+    flexWrap: 'wrap'
+  },
+  container: {
+    flex: 1,
+    marginTop: 30,
+  },
+  tabView: {
+    width: deviceWidth,
+    padding: 10,
+    backgroundColor: 'rgba(0,0,0,0.01)',
+  },
+  card: {
+    borderWidth: 1,
+    backgroundColor: '#fff',
+    borderColor: 'rgba(0,0,0,0.1)',
+    margin: 5,
+    padding: 15,
+    shadowColor: '#ccc',
+    shadowOffset: {width: 2, height: 2},
+    shadowOpacity: 0.5,
+    shadowRadius: 3,
+  },
 });
 
 

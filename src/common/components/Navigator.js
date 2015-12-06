@@ -32,6 +32,8 @@ export default class Nav extends React.Component {
           routeMapper={NavigationBarRouteMapper}
           style={styles.navBar}/>
       );
+    } else {
+      navBar = null;
     }
 
     return (
@@ -66,7 +68,6 @@ var NavigationBarRouteMapper = {
         onPress={() => navigator.pop()}
         style={styles.navBarLeftButton}>
         <Text style={[styles.navBarText, styles.navBarButtonText]}>
-          {previousRoute.title}
         </Text>
       </TouchableOpacity>
     );

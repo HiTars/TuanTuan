@@ -33,24 +33,125 @@ export default class HistoryRow extends Component {
     this._onPress = this._onPress.bind(this);
   }
 
+
   render () {
-    var TouchableElement = TouchableHighlight;
-    if (Platform.OS === 'android') {
-      TouchableElement = TouchableNativeFeedback;
-    }
-    return (
-      <View>
-        <TouchableElement onPress={this.props.checkable ? this._onPress : this.props.onSelect}>
-          <View style={getCircleWrapStyles(this.state.selected)}>
-          <View style={getCircleStyles(this.state.selected)}>
+    let data = this.props.history.get('data')
+    var date = (this.props.history.createdAt).toISOString().replace(/T.+/, '')
+    switch (this.props.history.get('type')) {
+      case 1 :
+        return (
+          <View style={styles.container}>
+            <Text style={styles.date}>{date}</Text>
             <Text style={styles.welcome}>
-              {this.props.history.get('type')}
+              {data.username}创建{data.tuanname}
             </Text>
           </View>
+        );
+      case 2 :
+        return (
+          <View style={styles.container}>
+            <Text style={styles.date}>{date}</Text>
+            <Text style={styles.welcome}>
+              {data.username}加入{data.tuanname}
+            </Text>
           </View>
-        </TouchableElement>
-      </View>
-    );
+        );
+      case 3 :
+        return (
+          <View style={styles.container}>
+            <Text style={styles.date}>{date}</Text>
+            <Text style={styles.welcome}>
+              {data.username}退出{data.tuanname}
+            </Text>
+          </View>
+        );
+      case 5 :
+        return (
+          <View style={styles.container}>
+            <Text style={styles.date}>{date}</Text>
+            <Text style={styles.welcome}>
+              {data.fromname}团的团名被{data.username}修改为{data.toname}
+            </Text>
+          </View>
+        );
+      case 6 :
+        return (
+          <View style={styles.container}>
+            <Text style={styles.date}>{date}</Text>
+            <Text style={styles.welcome}>
+              {data.fromname}团的口号被{data.username}修改为{data.toname}
+            </Text>
+          </View>
+        );
+      case 10:
+        if (this.props.history.get('included')) {
+          return (
+            <View style={styles.container}>
+              <Text style={styles.date}>{date}</Text>
+              <Text style={styles.welcome}>
+                {data.username}请大家{data.members.length + data.othersnum}人消费了{data.money} 元
+              </Text>
+            </View>
+          );
+        } else {
+          return (
+            <View style={styles.container}>
+              <Text style={styles.date}>{date}</Text>
+              <Text style={styles.welcome}>
+                {data.username}请大家{data.members.length + data.othersnum}人消费了{data.money} 元
+                (除我)
+              </Text>
+            </View>
+          );
+        }
+      case  11:
+        return (
+          <View style={styles.container}>
+            <Text style={styles.date}>{date}</Text>
+            <Text style={styles.welcome}>
+              {data.username}请大家{data.members.length}人消费了{data.money}元（已撤销）
+            </Text>
+          </View>
+        );
+      case  12:
+        return (
+          <View style={styles.container}>
+            <Text style={styles.date}>{date}</Text>
+            <Text style={styles.welcome}>
+              {data.username}发起了一次{data.members.length}人筹款消费
+            </Text>
+          </View>
+        );
+      case  13:
+        return (
+          <View style={styles.container}>
+            <Text style={styles.date}>{date}</Text>
+            <Text style={styles.welcome}>
+              {data.username}发起的筹款消费已经结束
+            </Text>
+          </View>
+        );
+      case  14:
+        return (
+          <View style={styles.container}>
+            <Text style={styles.date}>{date}</Text>
+            <Text style={styles.welcome}>
+              {data.username}发起了筹款消费（已撤销）
+            </Text>
+          </View>
+        );
+      default :
+        return (
+          <View style={styles.container}>
+            <Text style={styles.date}>{date}</Text>
+            <Text style={styles.welcome}>
+              默认
+
+            </Text>
+          </View>
+        );
+    }
+
   }
 
   _onPress() {
@@ -61,33 +162,24 @@ export default class HistoryRow extends Component {
   }
 }
 
-var getCircleStyles = function(selected) {
-  return {
-    height: 70,
-    width: 70,
-    margin: 10,
-    backgroundColor: 'rgb(164,129,200)',
-    borderRadius: 70/2,
-    backgroundColor: (selected ? 'rgb(164,129,200)' : 'rgb(0,129,200)'),
-    justifyContent: 'center',
-    alignItems: 'center',
-  }
-};
-var getCircleWrapStyles = function(selected) {
-  return {
-    height: 80,
-    width: 80,
-    margin: 10,
-    borderRadius: 80/2,
-    backgroundColor: (selected ? 'rgba(164,129,200, .5)' : 'rgba(0,129,200, .5)'),
-    justifyContent: 'center',
-    alignItems: 'center',
-  }
-};
 
 var styles = StyleSheet.create({
-  welcome: {
+  container : {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderColor: '#eee',
+    paddingVertical : 10
+  },
+  date: {
     fontSize: 15,
-    color: 'white'
+    color: 'black',
+    marginRight:5
+  },
+  welcome: {
+    width: 210,
+    fontSize: 15,
+    color: 'black',
+    flexDirection: 'row',
+    flexWrap: 'wrap'
   }
 });
