@@ -67,6 +67,57 @@ var AccountStore = assign({}, EventEmitter.prototype, {
   }
 });
 
+var fetchAccounts = function() {
+  var query = new AV.Query(AppGlobal.Account);
+  query.equalTo('user', _user);
+  query.notEqualTo('state', -1);
+  query.descending("updatedAt");
+  query.include('tuan');
+  query.find().then((results) => {
+    _acounts = results
+    AccountStore.emitChange('ALL');
+  });
+};
+
+var fetchAccountsOfAccount = function(account) {
+  var query = new AV.Query(AppGlobal.Account);
+  query.equalTo('tuan', account.get('tuan'));
+  query.notEqualTo('state', -1);
+  query.include('user');
+  query.include('tuan');
+  query.find().then((results) => {
+    results.sort(function(a, b) {
+        return a.get('money') - b.get('money');
+    });
+    _accountsMap[account.id] = results;
+    AccountStore.emitChange(account.id);
+  }).catch((e)=>console.log(e));
+}
+
+var _fetchPagedHistoryOfAccount = function(account, start) {
+  var query = new AV.Query(AppGlobal.TuanHistory);
+  query.equalTo('tuan', account.get('tuan'));
+  query.descending("createdAt");
+  query.skip(start);
+  query.limit(start+10);
+  query.include('creater');
+  return query.find();
+}
+
+var fetchHistoryOfAccount = function(account) {
+  _fetchPagedHistoryOfAccount(account, 0).then((results) => {
+    _historyMap[account.id] = results;
+    AccountStore.emitChange(account.id);
+  }).catch((e)=>console.log(e));
+}
+
+var fetchMoreHistoryOfAccount = function(account) {
+  _fetchPagedHistoryOfAccount(account, _historyMap[account.id].length).then((results) => {
+    _historyMap[account.id] = _historyMap[account.id].concat(results);
+    AccountStore.emitChange(account.id);
+  }).catch((e)=>console.log(e));
+}
+
 var genHistory = function(user, tuan, type, notice) {
   var tuanHistory = new AppGlobal.TuanHistory();
   tuanHistory.set('creater', user);
@@ -118,18 +169,6 @@ var joinTuan = function(user, tuan, account) {
     genHistory(user, tuan, AppGlobal.HISTORY_TYPE.JOIN, true);
   }
   return account.save();
-};
-
-var fetchAccounts = function() {
-  var query = new AV.Query(AppGlobal.Account);
-  query.equalTo('user', _user);
-  query.notEqualTo('state', -1);
-  query.descending("updatedAt");
-  query.include('tuan');
-  query.find().then((results) => {
-    _acounts = results
-    AccountStore.emitChange('ALL');
-  });
 };
 
 var getSelectedAccounts = function(account, selected) {
@@ -227,6 +266,8 @@ var doAABill = function(account, accounts, othersnum, price) {
         'members': members
       });
       tuanHistory.save();
+      // 重新获取History(accounts不需要重新获取，因为其直接对Store进行的修改)
+      fetchHistoryOfAccount(account);
     }).catch((e)=>console.log(e));
   } else {
     AppGlobal.alert('Invalid Parameters');
@@ -243,46 +284,13 @@ AccountStore.dispatchToken = AppDispatcher.register(function(action) {
       }).catch((e)=>console.log(e));
       break;
     case AccountConstants.FETCH_ACCOUNTS_OF_ACCOUNT:
-      var query = new AV.Query(AppGlobal.Account);
-      query.equalTo('tuan', action.account.get('tuan'));
-      query.notEqualTo('state', -1);
-      query.include('user');
-      query.include('tuan');
-      query.find().then((results) => {
-        var members = [];
-        results.sort(function(a, b) {
-            return a.get('money') - b.get('money');
-        });
-        _accountsMap[action.account.id] = results;
-        AccountStore.emitChange(action.account.id);
-      }).catch((e)=>console.log(e));
+      fetchAccountsOfAccount(action.account);
       break;
     case AccountConstants.FETCH_HISTORY_OF_ACCOUNT:
-      var query = new AV.Query(AppGlobal.TuanHistory);
-      query.equalTo('tuan', action.account.get('tuan'));
-      query.descending("createdAt");
-      query.skip(0);
-      query.limit(10);
-      query.include('creater');
-      query.find().then(function(results) {
-        _historyMap[action.account.id] = results;
-        console.log(_historyMap[action.account.id]);
-        AccountStore.emitChange(action.account.id);
-      }).catch((e)=>console.log(e));;
+      fetchHistoryOfAccount(action.account);
       break;
     case AccountConstants.FETCH_MORE_HISTORY_OF_ACCOUNT:
-      var start = _historyMap[action.account.id].length;
-      var query = new AV.Query(AppGlobal.TuanHistory);
-      query.equalTo('tuan', action.account.get('tuan'));
-      query.descending("createdAt");
-      query.skip(start);
-      query.limit(start+10);
-      query.include('creater');
-      query.find().then(function(results) {
-        _historyMap[action.account.id] = _historyMap[action.account.id].concat(results);
-        console.log(_historyMap[action.account.id]);
-        AccountStore.emitChange(action.account.id);
-      }).catch((e)=>console.log(e));
+      fetchMoreHistoryOfAccount(action.account);
       break;
     case AccountConstants.CREATE_ACCOUNT:
       var tuan = new AppGlobal.Tuan();
