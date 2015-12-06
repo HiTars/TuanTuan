@@ -130,7 +130,17 @@ var fetchAccounts = function() {
     _acounts = results
     AccountStore.emitChange('ALL');
   });
-}
+};
+
+var getSelectedAccounts = function(account, selected) {
+  var accounts = [];
+  for (var i = 0; i < _accountsMap[account.id].length; i++) {
+    if (selected[_accountsMap[account.id][i].id]) {
+      accounts.push(_accountsMap[account.id][i]);
+    }
+  }
+  return accounts;
+};
 
 // 删除团，该团成员的账户，所有团历史
 var deleteTuan = function(tuan) {
@@ -141,7 +151,87 @@ var deleteTuan = function(tuan) {
     historyQuery.equalTo('tuan', tuan);
     historyQuery.destroyAll();
     tuan.destroy();
-}
+};
+
+// 记录一笔消费
+var recordAccount = function (account, money, isnew) {
+    /*var history = account.get('history'); // 个人近期消费历史，记录时间和金额
+    if (isnew && (money >= 0 || !history)) {
+        // 正向消费或尚未有历史记录(抹除之前记录，写入当前余额和本次消费金额)
+        history = [];
+        history.push({
+            'money' : formatFloat(account.get('money'))
+        });
+        history.push({
+            'money' : formatFloat(money),
+            'time': new Date().getTime()
+        });
+    } else {
+        if (isnew) {
+            // 新的负向消费(加入一笔记录)
+            history.push({
+                'money' : formatFloat(money),
+                'time': new Date().getTime()
+            });
+        } else {
+            // 修改消费(修改最后一个消费记录)
+            history[history.length-1].money = formatFloat(money + Number(history[history.length-1].money));
+            history[history.length-1].time = new Date().getTime();
+        }
+    }
+    account.set('history', history);*/
+    account.increment('money', money);
+};
+
+/** AA 买单
+ * 1. 给买单者记账(account是买单者)
+ * 2. 给被买单者记账(accounts是被买单者)，并群发消费信息
+ */
+var doAABill = function(account, accounts, othersnum, price) {
+  var num = accounts.length;
+  if (num > 0 && othersnum >= 0 && othersnum < 100 && price >= 0 && price < 5000) {
+    var avg = Math.ceil(price * 100 / (num + othersnum)) / 100;
+    // 给买单者记账
+    recordAccount(account, avg * num, true);
+    // 给团成员记账(注意团成员中包含买单者的情况)
+    var members = [];
+    var promises = [];
+    for (var i = 0; i < num; i++) {
+        var current = accounts[i];
+        if (current.get('user').id == _user.id) {
+            current = account;
+        }
+        recordAccount(current, -avg, true);
+        current.increment('news');
+        members.push(current.get('user').id);
+        promises.push(current.save());
+    }
+    // 给买单者记总账
+    account.get('user').increment('money', avg * num);
+    // 给该团记总账
+    account.get('tuan').increment('money', avg * num);
+    promises.push(account.save());
+    AV.Promise.when(promises).then(function() {
+      // 生成消费记录
+      var user = account.get('user');
+      var tuan = account.get('tuan');
+      var tuanHistory = new AppGlobal.TuanHistory();
+      tuanHistory.set('creater', user);
+      tuanHistory.set('tuan', tuan);
+      tuanHistory.set('type', AppGlobal.HISTORY_TYPE.BILL);
+      tuanHistory.set('data', {
+        'username': user.get('nickname'),
+        'tuanname': tuan.get('name'),
+        'othersnum': othersnum,
+        'money': price,
+        'members': members
+      });
+      tuanHistory.save();
+    }).catch((e)=>console.log(e));
+  } else {
+    AppGlobal.alert('Invalid Parameters');
+  }
+};
 
 // Register callback to handle all updates
 AccountStore.dispatchToken = AppDispatcher.register(function(action) {
@@ -236,12 +326,12 @@ AccountStore.dispatchToken = AppDispatcher.register(function(action) {
           action.account.save();
         }
       }
+      fetchAccounts();
       AppGlobal.alert(message);
       break;
     case AccountConstants.DO_AABILL:
-      AppGlobal.alert(action.actionType);
+      doAABill(action.account, getSelectedAccounts(action.account, action.selected), action.othersnum, action.price);
       break;
-
     default:
       // no op
   }
